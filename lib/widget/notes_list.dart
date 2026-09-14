@@ -17,6 +17,11 @@ class NotesList extends StatelessWidget {
     await box.deleteAt(index);
   }
 
+  Future<void> _toggleNoteBox(int index) async {
+    await alternateBox.add(box.getAt(index)!);
+    await box.deleteAt(index);
+  }
+
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
@@ -29,6 +34,9 @@ class NotesList extends StatelessWidget {
             return Dismissible(
               key: ValueKey(note.id),
               direction: DismissDirection.endToStart,
+              onDismissed: (direction) {
+                _toggleNoteBox(index);
+              },
               child: NoteCard(
                 note: note,
                 isEditable: isEditable,

@@ -49,8 +49,11 @@ class _HomeState extends State<Home> {
   List<NoteModel> allNotes = [];
   Box<NoteModel> get notesBox => Hive.box<NoteModel>("user_notes");
   Box<NoteModel> get deletedBox => Hive.box<NoteModel>("deleted_notes");
+  late Box<NoteModel> queriedBox;
+  List<NoteModel> searchedNotes = [];
   bool isLoading = true;
   late bool isSeachEnabled;
+  String searchQuery = "";
   @override
   void initState() {
     super.initState();
@@ -82,6 +85,8 @@ class _HomeState extends State<Home> {
             onPressed: () {
               setState(() {
                 isSeachEnabled = !isSeachEnabled;
+                searchQuery = "";
+                searchedNotes = [];
               });
             },
           ),
@@ -94,6 +99,20 @@ class _HomeState extends State<Home> {
               children: [
                 if (isSeachEnabled)
                   TextField(
+                    onChanged: (value) {
+                      List<NoteModel> searchNotes = [];
+                      for (int index = 0; index < notesBox.length; index++) {
+                        NoteModel note = notesBox.getAt(index)!;
+                        if (note.title!.toLowerCase().contains(value) ||
+                            note.description.toLowerCase().contains(value)) {
+                          searchNotes.add(note);
+                        }
+                      }
+                      setState(() {
+                        searchQuery = value;
+                        searchedNotes = value.isEmpty ? [] : searchNotes;
+                      });
+                    },
                     decoration: InputDecoration(
                       hintText: "Search Query.....",
                       border: OutlineInputBorder(
@@ -101,6 +120,9 @@ class _HomeState extends State<Home> {
                       ),
                     ),
                   ),
+                Text(
+                  "Search String : $searchQuery , total searched notes : ${searchedNotes.length}",
+                ),
                 Text(
                   "All Notes.. [<- to delete]",
                   style: TextStyle(
