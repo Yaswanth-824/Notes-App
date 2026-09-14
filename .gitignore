@@ -7,8 +7,8 @@
 .buildlog/
 .history
 
-
-
+lib/temp
+lib/widget/menu.dart
 # Flutter repo-specific
 /bin/cache/
 /bin/internal/bootstrap.bat

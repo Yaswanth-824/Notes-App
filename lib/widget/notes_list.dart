@@ -26,12 +26,16 @@ class NotesList extends StatelessWidget {
           itemCount: box.length,
           itemBuilder: ((context, index) {
             final NoteModel note = box.getAt(index)!;
-            return NoteCard(
-              note: note,
-              isEditable: isEditable,
-              permanentDelete: () {
-                _permanetlyDeleteNote(index);
-              },
+            return Dismissible(
+              key: ValueKey(note.id),
+              direction: DismissDirection.endToStart,
+              child: NoteCard(
+                note: note,
+                isEditable: isEditable,
+                permanentDelete: () {
+                  _permanetlyDeleteNote(index);
+                },
+              ),
             );
           }),
         );

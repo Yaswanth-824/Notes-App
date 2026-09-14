@@ -92,9 +92,15 @@ class _HomeState extends State<Home> {
           ? Center(child: CircularProgressIndicator(color: Color(0xFF80CBC4)))
           : Column(
               children: [
-                isSeachEnabled
-                    ? Text("Search Enabled")
-                    : Text("Seach Desabled"),
+                if (isSeachEnabled)
+                  TextField(
+                    decoration: InputDecoration(
+                      hintText: "Search Query.....",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                  ),
                 Text(
                   "All Notes.. [<- to delete]",
                   style: TextStyle(
@@ -103,10 +109,13 @@ class _HomeState extends State<Home> {
                     color: Colors.white,
                   ),
                 ),
-                NotesList(
-                  box: notesBox,
-                  alternateBox: deletedBox,
-                  isEditable: true,
+                Expanded(
+                  flex: 2,
+                  child: NotesList(
+                    box: notesBox,
+                    alternateBox: deletedBox,
+                    isEditable: true,
+                  ),
                 ),
                 Text(
                   "Deleted Notes... [-> to add]",
@@ -116,10 +125,13 @@ class _HomeState extends State<Home> {
                     color: Colors.white,
                   ),
                 ),
-                NotesList(
-                  box: notesBox,
-                  alternateBox: deletedBox,
-                  isEditable: true,
+                Expanded(
+                  flex: 1,
+                  child: NotesList(
+                    box: deletedBox,
+                    alternateBox: notesBox,
+                    isEditable: true,
+                  ),
                 ),
               ],
             ),

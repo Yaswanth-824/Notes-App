@@ -51,20 +51,20 @@ class NoteCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                note.title!,
-                overflow: TextOverflow.ellipsis,
+              Expanded(
+                child: Text(
+                  note.title!,
+                  overflow: TextOverflow.ellipsis,
 
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                  color: Colors.white,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                    color: Colors.white,
+                  ),
                 ),
               ),
 
-              Expanded(
-                child: isEditable ? editAction(context, note) : deleteAction(),
-              ),
+              isEditable ? editAction(context, note) : deleteAction(),
             ],
           ),
           const Divider(color: Color(0xFF121212)),

@@ -47,8 +47,11 @@ class _EditNoteState extends State<EditNote> {
         actions: [
           IconButton(
             onPressed: () {
-              widget.note.title = _titleController.text;
-              widget.note.description = _descriptionController.text;
+              String title = _titleController.text.trim();
+              title = title.isEmpty ? "untitled" : title;
+              String description = _descriptionController.text.trim();
+              widget.note.title = title;
+              widget.note.description = description;
               widget.note.id = DateTime.now().microsecondsSinceEpoch.toString();
               widget.note.save();
               Navigator.pop(context);
