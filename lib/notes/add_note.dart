@@ -14,20 +14,20 @@ class AddNote extends StatefulWidget {
 }
 
 class _AddNoteState extends State<AddNote> {
-  late TextEditingController _titleControllers;
-  late TextEditingController _descriptionControllers;
+  late TextEditingController _titleController;
+  late TextEditingController _descriptionController;
   @override
   void initState() {
     super.initState();
-    _titleControllers = TextEditingController();
-    _descriptionControllers = TextEditingController();
+    _titleController = TextEditingController();
+    _descriptionController = TextEditingController();
   }
 
   @override
   void dispose() {
     super.dispose();
-    _titleControllers.dispose();
-    _descriptionControllers.dispose();
+    _titleController.dispose();
+    _descriptionController.dispose();
   }
 
   @override
@@ -43,12 +43,12 @@ class _AddNoteState extends State<AddNote> {
         actions: [
           ElevatedButton(
             onPressed: () {
-              if (_titleControllers.text.isEmpty) {
-                _titleControllers.text = _descriptionControllers.text[50];
-              }
+              String title = _titleController.text.trim();
+              title = title.isEmpty ? "Untitled" : title;
+              String description = _descriptionController.text.trim();
               NoteModel newNote = NoteModel(
-                title: _titleControllers.text,
-                description: _descriptionControllers.text,
+                title: title,
+                description: description,
                 date: DateFormat('MMM dd, yyyy').format(DateTime.now()),
               );
 
@@ -79,7 +79,7 @@ class _AddNoteState extends State<AddNote> {
         child: Column(
           children: [
             TextField(
-              controller: _titleControllers,
+              controller: _titleController,
               maxLength: 50,
               style: TextStyle(
                 color: Colors.white,
@@ -97,7 +97,7 @@ class _AddNoteState extends State<AddNote> {
               height: 200,
               child: TextField(
                 expands: true,
-                controller: _descriptionControllers,
+                controller: _descriptionController,
                 keyboardType: TextInputType.multiline,
                 style: TextStyle(
                   color: Colors.white,

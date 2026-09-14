@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:learning/models/notes_model.dart';
 import 'package:learning/notes/add_note.dart';
-import 'package:learning/widget/notes_card.dart';
+import 'package:learning/widget/notes_list.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -54,31 +54,8 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    _getAllNotes();
     isLoading = false;
     isSeachEnabled = false;
-  }
-
-  void _getAllNotes() {
-    allNotes = notesBox.values.toList();
-  }
-
-  Future<void> _deleteNote(int index, NoteModel note) async {
-    await notesBox.deleteAt(index);
-    await deletedBox.add(note);
-
-    if (mounted) {}
-  }
-
-  Future<void> _reAddNote(int index, NoteModel note) async {
-    await deletedBox.deleteAt(index);
-    await notesBox.add(note);
-
-    if (mounted) {}
-  }
-
-  Future<void> _permanetlyDeleteNote(int index) async {
-    await deletedBox.deleteAt(index);
   }
 
   @override
@@ -126,36 +103,10 @@ class _HomeState extends State<Home> {
                     color: Colors.white,
                   ),
                 ),
-                Expanded(
-                  flex: 2,
-                  child: ValueListenableBuilder(
-                    valueListenable: notesBox.listenable(),
-                    builder: (context, Box<NoteModel> box, _) {
-                      return ListView.builder(
-                        itemCount: box.length,
-                        itemBuilder: (context, index) {
-                          final note = box.getAt(index)!;
-                          return Dismissible(
-                            key: Key(note.id!),
-                            direction: DismissDirection.endToStart,
-                            onDismissed: (direction) => setState(() {
-                              _deleteNote(index, note);
-                            }),
-                            background: Container(
-                              color: Colors.white,
-                              child: Icon(Icons.delete),
-                            ),
-                            child: NoteCard(
-                              note: note,
-                              isEditable: true,
-                              permanenetDelete: () =>
-                                  _permanetlyDeleteNote(index),
-                            ),
-                          );
-                        },
-                      );
-                    },
-                  ),
+                NotesList(
+                  box: notesBox,
+                  alternateBox: deletedBox,
+                  isEditable: true,
                 ),
                 Text(
                   "Deleted Notes... [-> to add]",
@@ -165,33 +116,10 @@ class _HomeState extends State<Home> {
                     color: Colors.white,
                   ),
                 ),
-                Expanded(
-                  flex: 1,
-                  child: ValueListenableBuilder(
-                    valueListenable: deletedBox.listenable(),
-                    builder: (context, Box<NoteModel> box, _) {
-                      print("deleted Notes :${box.length}");
-                      return ListView.builder(
-                        itemCount: box.length,
-                        itemBuilder: (context, index) {
-                          final note = box.getAt(index)!;
-                          return Dismissible(
-                            key: Key(note.id!),
-                            direction: DismissDirection.startToEnd,
-                            onDismissed: (direction) => setState(() {
-                              _reAddNote(index, note);
-                            }),
-                            child: NoteCard(
-                              note: note,
-                              isEditable: false,
-                              permanenetDelete: () =>
-                                  _permanetlyDeleteNote(index),
-                            ),
-                          );
-                        },
-                      );
-                    },
-                  ),
+                NotesList(
+                  box: notesBox,
+                  alternateBox: deletedBox,
+                  isEditable: true,
                 ),
               ],
             ),

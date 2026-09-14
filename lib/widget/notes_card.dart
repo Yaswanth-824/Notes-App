@@ -7,17 +7,17 @@ class NoteCard extends StatelessWidget {
     super.key,
     required this.note,
     required this.isEditable,
-    required this.permanenetDelete,
+    required this.permanentDelete,
   });
   final NoteModel note;
   final Icon deleteIcon = Icon(Icons.delete);
   final Icon editIcon = Icon(Icons.edit);
   final bool isEditable;
-  final VoidCallback permanenetDelete;
+  final VoidCallback permanentDelete;
   Widget deleteAction() {
     return IconButton(
       onPressed: () {
-        permanenetDelete();
+        permanentDelete();
       },
       icon: deleteIcon,
     );

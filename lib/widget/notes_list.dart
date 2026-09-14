@@ -4,8 +4,15 @@ import 'package:learning/models/notes_model.dart';
 import 'package:learning/widget/notes_card.dart';
 
 class NotesList extends StatelessWidget {
-  const NotesList({super.key, required this.box});
+  const NotesList({
+    super.key,
+    required this.box,
+    required this.alternateBox,
+    required this.isEditable,
+  });
   final Box<NoteModel> box;
+  final Box<NoteModel> alternateBox;
+  final bool isEditable;
   Future<void> _permanetlyDeleteNote(int index) async {
     await box.deleteAt(index);
   }
@@ -21,8 +28,8 @@ class NotesList extends StatelessWidget {
             final NoteModel note = box.getAt(index)!;
             return NoteCard(
               note: note,
-              isEditable: false,
-              permanenetDelete: () {
+              isEditable: isEditable,
+              permanentDelete: () {
                 _permanetlyDeleteNote(index);
               },
             );
