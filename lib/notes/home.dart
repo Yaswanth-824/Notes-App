@@ -3,6 +3,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:learning/models/notes_model.dart';
 import 'package:learning/notes/add_note.dart';
 import 'package:learning/widget/notes_list.dart';
+import 'package:learning/widget/search.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -83,11 +84,10 @@ class _HomeState extends State<Home> {
           IconButton(
             icon: Icon(Icons.search, color: Colors.white),
             onPressed: () {
-              setState(() {
-                isSeachEnabled = !isSeachEnabled;
-                searchQuery = "";
-                searchedNotes = [];
-              });
+              showSearch(
+                context: context,
+                delegate: Search(searchNotes: notesBox),
+              );
             },
           ),
         ],
@@ -97,32 +97,6 @@ class _HomeState extends State<Home> {
           ? Center(child: CircularProgressIndicator(color: Color(0xFF80CBC4)))
           : Column(
               children: [
-                if (isSeachEnabled)
-                  TextField(
-                    onChanged: (value) {
-                      List<NoteModel> searchNotes = [];
-                      for (int index = 0; index < notesBox.length; index++) {
-                        NoteModel note = notesBox.getAt(index)!;
-                        if (note.title!.toLowerCase().contains(value) ||
-                            note.description.toLowerCase().contains(value)) {
-                          searchNotes.add(note);
-                        }
-                      }
-                      setState(() {
-                        searchQuery = value;
-                        searchedNotes = value.isEmpty ? [] : searchNotes;
-                      });
-                    },
-                    decoration: InputDecoration(
-                      hintText: "Search Query.....",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                  ),
-                Text(
-                  "Search String : $searchQuery , total searched notes : ${searchedNotes.length}",
-                ),
                 Text(
                   "All Notes.. [<- to delete]",
                   style: TextStyle(

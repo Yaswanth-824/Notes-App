@@ -4,7 +4,8 @@ import 'package:learning/models/notes_model.dart';
 
 class EditNote extends StatefulWidget {
   final NoteModel note;
-  const EditNote({super.key, required this.note});
+  const EditNote({super.key, required this.note, this.readOnly = false});
+  final bool readOnly;
 
   @override
   State<EditNote> createState() => _EditNoteState();
@@ -36,7 +37,7 @@ class _EditNoteState extends State<EditNote> {
     return Scaffold(
       backgroundColor: Color(0xFF121212),
       appBar: AppBar(
-        title: Text("Edit Note"),
+        title: widget.readOnly ? Text("Read-Only Mode") : Text("Edit Note"),
         backgroundColor: Color(0xFF1E1E1E),
         leading: IconButton(
           onPressed: () {
@@ -45,19 +46,21 @@ class _EditNoteState extends State<EditNote> {
           icon: Icon(Icons.arrow_back, color: Colors.white),
         ),
         actions: [
-          IconButton(
-            onPressed: () {
-              String title = _titleController.text.trim();
-              title = title.isEmpty ? "untitled" : title;
-              String description = _descriptionController.text.trim();
-              widget.note.title = title;
-              widget.note.description = description;
-              widget.note.id = DateTime.now().microsecondsSinceEpoch.toString();
-              widget.note.save();
-              Navigator.pop(context);
-            },
-            icon: Icon(Icons.save, color: Colors.white),
-          ),
+          if (!widget.readOnly)
+            IconButton(
+              onPressed: () {
+                String title = _titleController.text.trim();
+                title = title.isEmpty ? "untitled" : title;
+                String description = _descriptionController.text.trim();
+                widget.note.title = title;
+                widget.note.description = description;
+                widget.note.id = DateTime.now().microsecondsSinceEpoch
+                    .toString();
+                widget.note.save();
+                Navigator.pop(context);
+              },
+              icon: Icon(Icons.save, color: Colors.white),
+            ),
         ],
       ),
       body: Container(
@@ -73,6 +76,7 @@ class _EditNoteState extends State<EditNote> {
                 fontWeight: FontWeight.bold,
                 fontSize: 24,
               ),
+              readOnly: widget.readOnly,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 hintText: "Title with 50 chars",
@@ -91,6 +95,7 @@ class _EditNoteState extends State<EditNote> {
                   overflow: TextOverflow.fade,
                   fontSize: 16,
                 ),
+                readOnly: widget.readOnly,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   hintText: "Start Typing your Note hear",
